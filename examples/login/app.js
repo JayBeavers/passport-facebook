@@ -1,6 +1,12 @@
 var express = require('express')
   , passport = require('passport')
   , util = require('util')
+  , path = require('path')
+  , bodyParser = require('body-parser')
+  , cookieParser = require('cookie-parser')
+  , logger = require('morgan')
+  , methodOverride = require('method-override')
+  , session = require('express-session')
   , FacebookStrategy = require('passport-facebook').Strategy;
 
 var FACEBOOK_APP_ID = "--insert-facebook-app-id-here--"
@@ -54,16 +60,15 @@ var app = express();
 app.configure(function() {
   app.set('views', __dirname + '/views');
   app.set('view engine', 'ejs');
-  app.use(express.logger());
-  app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
-  app.use(express.session({ secret: 'keyboard cat' }));
+  app.use(logger());
+  app.use(cookieParser());
+  app.use(bodyParser());
+  app.use(methodOverride());
+  app.use(session({ secret: 'keyboard cat' }));
   // Initialize Passport!  Also use passport.session() middleware, to support
   // persistent login sessions (recommended).
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
 });
 
